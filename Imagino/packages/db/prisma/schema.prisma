@@ -14,25 +14,26 @@ datasource db {
 }
 
 model User {
-  id             String @id @default(uuid())
+  id             String   @id @default(uuid())
   userName       String
   profilePicture String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }
 
 model Model {
-  id         String         @id @default(uuid())
-  name       String
-  type       ModelTypeEnum
-  age        Int
-  ethinicity EthenecityEnum
-  eyeColor   EyeColorEnum
-  bald       Boolean
+  id            String          @id @default(uuid())
+  name          String
+  type          ModelTypeEnum
+  age           Int
+  ethinicity    EthenecityEnum
+  eyeColor      EyeColorEnum
+  bald          Boolean
+  userId        String
   trainingImage TrainingModel[]
-  outputImage OutputImage[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  outputImage   OutputImages[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
 }
 
 model TrainingModel {
@@ -42,19 +43,27 @@ model TrainingModel {
   model    Model  @relation(fields: [modelId], references: [id])
 }
 
-model OutputImage {
-  id       String @id @default(uuid())
-  imageUrl String
-  modelId  String
-  userId   String
-  model    Model  @relation(fields: [modelId], references: [id])
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum OutputImageStatusEnum {
+  Pending
+  Generated
+  Failed
 }
 
-model Pack {
-  id   String @id @default(uuid())
-  name String
+model OutputImages {
+  id        String                @id @default(uuid())
+  imageUrl  String                @default("")
+  modelId   String  
+  userId    String
+  prompt    String
+  status    OutputImageStatusEnum @default(Pending)
+  model     Model                 @relation(fields: [modelId], references: [id])
+  createdAt DateTime              @default(now())
+  updatedAt DateTime              @updatedAt
+}
+
+model Packs {
+  id      String        @id @default(uuid())
+  name    String
   prompts PackPrompts[]
 }
 
@@ -62,7 +71,7 @@ model PackPrompts {
   id     String @id @default(uuid())
   prompt String
   packId String
-  pack    Pack  @relation(fields: [packId], references: [id])
+  pack   Packs   @relation(fields: [packId], references: [id])
 }
 
 enum ModelTypeEnum {
@@ -74,11 +83,11 @@ enum ModelTypeEnum {
 enum EthenecityEnum {
   White
   Black
-  AsianAmerican
-  EastAsian
-  SouthEastAsian
-  SouthAsian
-  MiddleEastern
+  Asian_American   @map("Asian American")
+  East_Asian       @map("East Asian")
+  South_East_Asian @map("South East Asian")
+  South_Asian      @map("South Asian")
+  Middle_Eastern   @map("Middle Eastern")
   Pacific
   Hispanic
 }
