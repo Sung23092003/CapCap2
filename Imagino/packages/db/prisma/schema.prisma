@@ -21,26 +21,30 @@ model User {
   updatedAt      DateTime @updatedAt
 }
 
-model Model {
-  id            String          @id @default(uuid())
-  name          String
-  type          ModelTypeEnum
-  age           Int
-  ethinicity    EthenecityEnum
-  eyeColor      EyeColorEnum
-  bald          Boolean
-  userId        String
-  trainingImage TrainingModel[]
-  outputImage   OutputImages[]
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+enum ModelTrainingStatusEnum {
+  Pending
+  Generated
+  Failed
 }
 
-model TrainingModel {
-  id       String @id @default(uuid())
-  imageUrl String
-  modelId  String
-  model    Model  @relation(fields: [modelId], references: [id])
+model Model {
+  id             String                  @id @default(uuid())
+  name           String
+  type           ModelTypeEnum
+  age            Int
+  ethinicity     EthenecityEnum
+  eyeColor       EyeColorEnum
+  bald           Boolean
+  userId         String
+  triggerWord    String?
+  tensorPath     String?
+  trainingStatus ModelTrainingStatusEnum @default(Pending)
+  outputImage    OutputImages[]
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+  falAiRequestId String?
+  zipUrl         String
+  @@index([falAiRequestId])
 }
 
 enum OutputImageStatusEnum {
@@ -50,15 +54,18 @@ enum OutputImageStatusEnum {
 }
 
 model OutputImages {
-  id        String                @id @default(uuid())
-  imageUrl  String                @default("")
-  modelId   String  
-  userId    String
-  prompt    String
-  status    OutputImageStatusEnum @default(Pending)
-  model     Model                 @relation(fields: [modelId], references: [id])
-  createdAt DateTime              @default(now())
-  updatedAt DateTime              @updatedAt
+  id             String                @id @default(uuid())
+  imageUrl       String                @default("")
+  modelId        String
+  userId         String
+  prompt         String
+  falAiRequestId String?
+  status         OutputImageStatusEnum @default(Pending)
+  model          Model                 @relation(fields: [modelId], references: [id])
+  createdAt      DateTime              @default(now())
+  updatedAt      DateTime              @updatedAt
+
+  @@index([falAiRequestId])
 }
 
 model Packs {
@@ -71,7 +78,7 @@ model PackPrompts {
   id     String @id @default(uuid())
   prompt String
   packId String
-  pack   Packs   @relation(fields: [packId], references: [id])
+  pack   Packs  @relation(fields: [packId], references: [id])
 }
 
 enum ModelTypeEnum {

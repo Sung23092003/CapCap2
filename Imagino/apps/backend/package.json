@@ -14,10 +14,11 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@fal-ai/client": "^1.2.3",
     "@neondatabase/serverless": "^0.10.4",
     "@types/express": "^5.0.0",
-    "express": "^4.21.2",
     "common": "*",
-    "db": "*"
+    "db": "*",
+    "express": "^4.21.2"
   }
 }
