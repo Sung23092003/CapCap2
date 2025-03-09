@@ -16,8 +16,10 @@
   "dependencies": {
     "@fal-ai/client": "^1.2.3",
     "@neondatabase/serverless": "^0.10.4",
+    "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "common": "*",
+    "cors": "^2.8.5",
     "db": "*",
     "express": "^4.21.2"
   }
